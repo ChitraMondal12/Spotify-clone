@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spotify Login & Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    body {
+      background: url('https://images.unsplash.com/photo-1605902711622-cfb43c44367f?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 3rem 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 420px;
+      transition: all 0.3s ease;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .logo img {
+      width: 40px;
+      margin-right: 10px;
+    }
+
+    .logo h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1DB954;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #1DB954;
+    }
+
+    .button {
+      width: 100%;
+      padding: 0.9rem;
+      background-color: #1DB954;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      margin-top: 0.5rem;
+    }
+
+    .button:hover {
+      background-color: #17a247;
+    }
+
+    .toggle-link {
+      text-align: center;
+      margin-top: 1.2rem;
+    }
+
+    .toggle-link a {
+      color: #1DB954;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .toggle-link a:hover {
+      text-decoration: underline;
+      color: #14843d;
+    }
+
+    .form-container {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .form-container.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg" alt="Spotify Icon">
+      <h1>Spotify</h1>
+    </div>
+
+    <!-- Login Form -->
+    <div id="login-form" class="form-container active">
+      <h2>Welcome Back</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" required />
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" required />
+        </div>
+        <button type="submit" class="button">Log In</button>
+      </form>
+      <div class="toggle-link">
+        <p>Don't have an account? <a onclick="showForm('signup-form')">Sign Up</a></p>
+      </div>
+    </div>
+
+    <!-- Sign Up Form -->
+    <div id="signup-form" class="form-container">
+      <h2>Create Your Account</h2>
+      <form id="signupForm">
+        <div class="form-group">
+          <label for="signupName">Full Name</label>
+          <input type="text" id="signupName" required />
+        </div>
+        <div class="form-group">
+          <label for="signupEmail">Email</label>
+          <input type="email" id="signupEmail" required />
+        </div>
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <input type="password" id="signupPassword" required minlength="6" />
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" required minlength="6" />
+        </div>
+        <div class="form-group">
+          <label for="signupAddress">Address</label>
+          <input type="text" id="signupAddress" required />
+        </div>
+        <button type="submit" class="button">Sign Up</button>
+      </form>
+      <div class="toggle-link">
+        <p>Already have an account? <a onclick="showForm('login-form')">Log In</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logic -->
+  <script>
+  const loginForm = document.querySelector('#loginForm');
+  const signupForm = document.querySelector('#signupForm');
+
+  // Toggle between login/signup forms
+  function showForm(formId) {
+    document.getElementById('login-form').classList.remove('active');
+    document.getElementById('signup-form').classList.remove('active');
+    document.getElementById(formId).classList.add('active');
+  }
+
+  // Constant backend base URL
+  const BASE_URL = 'http://localhost:3002';
+
+  // Login handler
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    try {
+      const res = await fetch(`${BASE_URL}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('email', email); // Store for next pages
+        window.location.href = 'languagechoosen.html';
+      } else {
+        alert(data.message || "Login failed");
+      }
+    } catch (err) {
+      alert("Login failed. Server not reachable.");
+    }
+  });
+
+  // Signup handler
+  signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const address = document.getElementById('signupAddress').value;
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${BASE_URL}/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, address })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('email', email); // Store for next pages
+        window.location.href = 'languagechoosen.html';
+      } else {
+        alert(data.message || "Signup failed");
+      }
+    } catch (err) {
+      alert("Signup failed. Server not reachable.");
+    }
+  });
+</script>
+
+
+</body>
+</html>

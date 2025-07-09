@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spotify Clone</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1db954 0%, #121212 100%);
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+    }
+    .song-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .song-card {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+    }
+    .song-card:hover {
+      transform: scale(1.05);
+    }
+    .song-card h3 {
+      font-size: 16px;
+      margin: 10px 0 5px;
+    }
+    .song-card p {
+      font-size: 14px;
+      color: #aaa;
+    }
+    button {
+      background-color: #1db954;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin-top: 10px;
+      cursor: pointer;
+      border-radius: 20px;
+    }
+    button:hover {
+      background-color: #1ed760;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎵 My Music Gallery</h1>
+    <input type="text" id="searchBar" placeholder="Search songs..."/>
+    <div id="songContainer" class="song-container"></div>
+  </div>
+
+  <script>
+    const hindiSongs = [
+      "Kesariya", "Tum Mile", "Raabta", "Tera Yaar Hoon Main", "Apna Bana Le",
+      "Shayad", "Dil Diyan Gallan", "Hawayein", "Tujhe Kitna Chahne Lage", "Pee Loon",
+      "Tum Se Hi", "Ae Dil Hai Mushkil", "Kalank Title Track", "Khairiyat", "Channa Mereya",
+      "Zaalima", "Jeene Laga Hoon", "Phir Le Aya Dil", "Janam Janam", "Gerua",
+      "Main Phir Bhi Tumko Chahunga", "Muskurane", "Bol Do Na Zara", "Sanam Re", "Sun Saathiya",
+      "Kabira", "Galliyan", "Raaz Aankhein Teri", "Sunn Raha Hai", "Hasi",
+      "Tera Ban Jaunga", "Tujh Mein Rab Dikhta Hai", "Pachtaoge", "Dil Meri Na Sune", "Kaise Hua",
+      "Tere Bina", "Tera Ghata", "Ranjha", "Vaaste", "Lut Gaye",
+      "Thoda Thoda Pyaar", "Tujhe Sochta Hoon", "Tu Hi Hai Aashiqui", "Chhod Diya", "Naino Ne Bandhi",
+      "Tu Jaane Na", "Agar Tum Saath Ho", "Mast Magan", "Hamari Adhuri Kahani", "Tera Hone Laga Hoon"
+    ];
+
+    const bengaliSongs = [
+      "Tomake Chai", "Mon Majhi Re", "Tumi Jake Bhalobasho", "Ekhon Onek Raat", "Amaro Porano Jaha Chay",
+      "Tumi Robe Nirobe", "O Mon Re", "Pagol Hoye Jabo", "Dekhechi Rupsho Sagore", "Mon Boleche",
+      "Alo Chhaya", "Shono Ami Dur Theke", "Bariye Dao Tomar Haat", "Bhalobashar Morshum", "Khola Janala",
+      "Mon Amar Kemon Kemon Kore", "Chirodini Tumi Je Amar", "Jani Dekha Hobe", "Ogo Bideshini",
+      "Eto Boro Akash", "Megher Palok", "Shudhu Tui", "Bosonto Eshe Geche", "Abar Ashibo Phire",
+      "Ei Meghla Dine Ekla", "Ore Neel Doriya", "Ekla Cholo Re", "Tumi Ashbe Bole", "Ei Raat Tomar Amar"
+    ];
+
+    const englishSongs = [
+      "Shape of You", "Blinding Lights", "Perfect", "Someone You Loved", "Let Her Go",
+      "Shallow", "Stay", "Levitating", "Peaches", "Bad Guy",
+      "Memories", "Senorita", "Happier", "Lovely", "Photograph",
+      "Believer", "Counting Stars", "Uptown Funk", "Girls Like You", "Closer"
+    ];
+
+    const songs = [];
+
+    hindiSongs.forEach((title, i) => songs.push({
+      title,
+      artist: `Hindi Artist ${i + 1}`,
+      language: "Hindi",
+      audio: `https://www.soundhelix.com/examples/mp3/SoundHelix-Song-${(i % 16) + 1}.mp3`
+    }));
+
+    bengaliSongs.forEach((title, i) => songs.push({
+      title,
+      artist: `Bengali Artist ${i + 1}`,
+      language: "Bengali",
+      audio: `https://www.soundhelix.com/examples/mp3/SoundHelix-Song-${((i + 50) % 16) + 1}.mp3`
+    }));
+
+    englishSongs.forEach((title, i) => songs.push({
+      title,
+      artist: `English Artist ${i + 1}`,
+      language: "English",
+      audio: `https://www.soundhelix.com/examples/mp3/SoundHelix-Song-${((i + 80) % 16) + 1}.mp3`
+    }));
+
+    const container = document.getElementById("songContainer");
+    const searchBar = document.getElementById("searchBar");
+
+    let currentAudio = null;
+
+    function renderSongs(songList) {
+      container.innerHTML = "";
+      songList.forEach((song, index) => {
+        const card = document.createElement("div");
+        card.className = "song-card";
+        card.innerHTML = `
+          <h3>${song.title}</h3>
+          <p>${song.artist} | ${song.language}</p>
+          <audio id="audio-${index}" src="${song.audio}"></audio>
+          <button onclick="togglePlay(${index})" id="btn-${index}">Play</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function togglePlay(index) {
+      const audio = document.getElementById(`audio-${index}`);
+      const button = document.getElementById(`btn-${index}`);
+
+      if (currentAudio && currentAudio !== audio) {
+        currentAudio.pause();
+        const allButtons = document.querySelectorAll("button");
+        allButtons.forEach(btn => {
+          if (btn.textContent === "Pause") btn.textContent = "Play";
+        });
+      }
+
+      if (audio.paused) {
+        audio.play();
+        button.textContent = "Pause";
+        currentAudio = audio;
+      } else {
+        audio.pause();
+        button.textContent = "Play";
+      }
+    }
+
+    searchBar.addEventListener("input", () => {
+      const searchTerm = searchBar.value.toLowerCase();
+      const filtered = songs.filter(song =>
+        song.title.toLowerCase().includes(searchTerm) ||
+        song.artist.toLowerCase().includes(searchTerm) ||
+        song.language.toLowerCase().includes(searchTerm)
+      );
+      renderSongs(filtered);
+    });
+
+    renderSongs(songs);
+  </script>
+</body>
+</html>

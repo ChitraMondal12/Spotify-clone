@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Select Language - Spotify</title>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #121212;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    select, button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    select {
+      background-color: #282828;
+      color: white;
+    }
+
+    button {
+      background-color: #1DB954;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #17a74a;
+    }
+  </style>
+</head>
+<body>
+  <h1>Select Your Language</h1>
+  <select id="languageSelect">
+    <option value="">-- Choose Language --</option>
+    <option value="English">English</option>
+    <option value="Hindi">Hindi</option>
+    <option value="Bengali">Bengali</option>
+    <option value="Tamil">Tamil</option>
+    <option value="Telugu">Telugu</option>
+  </select>
+  <br />
+  <button onclick="submitLanguage()">Welcome to Spotify</button>
+
+  <script>
+    const BASE_URL = 'http://localhost:3002';
+
+    function submitLanguage() {
+      const language = document.getElementById('languageSelect').value;
+      const email = localStorage.getItem('email');
+
+      if (!language) {
+        alert("Please select a language.");
+        return;
+      }
+
+      if (!email) {
+        alert("User not logged in.");
+        return;
+      }
+
+      fetch(`${BASE_URL}/set-language`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, language })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.message) {
+          window.location.href = 'index.html';
+        } else {
+          alert("Failed to set language.");
+        }
+      })
+      .catch(err => {
+        alert("Server error.");
+        console.error(err);
+      });
+    }
+  </script>
+</body>
+</html>

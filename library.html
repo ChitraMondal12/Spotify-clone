@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spotify Clone</title>
+  
+  <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+    
+  <div class="app-container">
+    <header class="navbar">
+      <div class="brand">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg" alt="Logo">
+        <h1>Spotify Clone</h1>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <aside class="sidebar">
+        
+  <nav>
+    <ul> 
+    
+      <button class="nav-btn"data-page="home">Home</button><br></br>
+      <button class="nav-btn"data-page="About">About</button><br></br>
+      
+  <button class="nav-btn" data-page="search">Search</button><br></br>
+  
+  <button class="nav-btn" data-page="library">My Library</button><br></br>
+
+
+
+    </ul>
+  </nav>
+</aside>
+
+      <section class="content">
+        <ul id="songList"></ul>
+        
+
+        <div class="now-playing-bar">
+          <div id="progressContainer" class="progress-container">
+  <div id="progress" class="progress"></div>
+</div>
+ <div class="spotify-playlist">
+    <h2>Popular Album</h2>
+    
+    </div>
+ </div>
+
+<div class="bottom">
+    <input type="range" name="range" id="myProgressBar" min="0" max="100">
+</div>
+          <div class="controls">
+            <button id="prevBtn" title="Previous"><img src="https://img.icons8.com/ios-filled/24/ffffff/skip-to-start.png" alt="Prev"></button>
+            <button id="playPauseBtn" title="Play/Pause"><img id="playPauseIcon" src="https://img.icons8.com/ios-filled/24/ffffff/play--v1.png" alt="Play"></button>
+            <button id="nextBtn" title="Next"><img src="https://img.icons8.com/ios-filled/24/ffffff/end.png" alt="Next"></button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+  async function getLanguage() {
+    const email = localStorage.getItem("userEmail");
+    const res = await fetch(`http://localhost:5000/get-language?email=${email}`);
+    const data = await res.json();
+    const langDisplay = document.createElement("div");
+    langDisplay.innerText = "🌐 Language: " + data.language;
+    langDisplay.style.margin = "10px";
+    document.body.prepend(langDisplay);
+  }
+
+  getLanguage();
+</script>
+
+  
+</body>
+</html>
